@@ -18,6 +18,7 @@
 
 #define REQUEST_RETRIES 4
 
+static char base_container[MAX_URL_SIZE];
 static char storage_url[MAX_URL_SIZE];
 static char storage_token[MAX_HEADER_SIZE];
 static pthread_mutex_t pool_mut;
@@ -35,6 +36,12 @@ static void lock_callback(int mode, int type, char *file, int line)
   else
     pthread_mutex_unlock(&(ssl_lockarray[type]));
 }
+
+void set_container(const char *acontainer)
+{
+        strncpy(base_container, acontainer,sizeof(base_container));
+}
+
 
 static unsigned long thread_id()
 {
@@ -96,6 +103,9 @@ static CURL *get_connection(const char *path)
   while (*path == '/')
     path++;
   snprintf(url, sizeof(url), "%s/%s", storage_url, path);
+  if(base_container[0]){
+    snprintf(url, sizeof(url), "%s/%s/%s", storage_url,base_container, path);
+  }
   curl_easy_setopt(curl, CURLOPT_URL, url);
   curl_easy_setopt(curl, CURLOPT_VERBOSE, debug);
   curl_easy_setopt(curl, CURLOPT_HEADER, 0);
