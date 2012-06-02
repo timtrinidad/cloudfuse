@@ -315,7 +315,9 @@ static int cfs_flush(const char *path, struct fuse_file_info *info)
 
 static int cfs_release(const char *path, struct fuse_file_info *info)
 {
-  close(((openfile *)(uintptr_t)info->fh)->fd);
+  openfile *of = (openfile *)(uintptr_t)info->fh;
+  close(of->fd);
+  free(of);
   return 0;
 }
 
