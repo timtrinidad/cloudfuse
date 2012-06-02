@@ -23,6 +23,7 @@ typedef struct dir_entry
   struct dir_entry *next;
 } dir_entry;
 
+void set_container(const char *acontainer);
 int object_read_fp(const char *path, FILE *fp);
 int object_write_fp(const char *path, FILE *fp);
 int list_directory(const char *path, dir_entry **);

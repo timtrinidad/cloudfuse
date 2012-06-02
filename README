@@ -36,6 +36,7 @@ USE:
     named $HOME/.cloudfuse:
         username=[username]
         api_key=[api key]
+        container=[base container]
 
     Or as mount options on the command line:
         cloudfuse -o username=redbo,api_key=713aa... mountpoint/
