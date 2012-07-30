@@ -424,12 +424,14 @@ static struct options {
     char cache_timeout[OPTION_SIZE];
     char authurl[OPTION_SIZE];
     char use_snet[OPTION_SIZE];
+    char container[OPTION_SIZE];
 } options = {
     .username = "",
     .api_key = "",
     .cache_timeout = "600",
     .authurl = "https://auth.api.rackspacecloud.com/v1.0",
     .use_snet = "false",
+    .container = "",
 };
 
 int parse_option(void *data, const char *arg, int key, struct fuse_args *outargs)
@@ -438,7 +440,8 @@ int parse_option(void *data, const char *arg, int key, struct fuse_args *outargs
       sscanf(arg, " api_key = %[^\r\n ]", options.api_key) ||
       sscanf(arg, " cache_timeout = %[^\r\n ]", options.cache_timeout) ||
       sscanf(arg, " authurl = %[^\r\n ]", options.authurl) ||
-      sscanf(arg, " use_snet = %[^\r\n ]", options.use_snet))
+      sscanf(arg, " use_snet = %[^\r\n ]", options.use_snet) ||
+      sscanf(arg, " container = %[^\r\n ]", options.container))
     return 0;
   if (!strcmp(arg, "-f") || !strcmp(arg, "-d") || !strcmp(arg, "debug"))
     cloudfs_debug(1);
@@ -477,6 +480,10 @@ int main(int argc, char **argv)
     fprintf(stderr, "  authurl=[used for testing]\n");
     return 1;
   }
+  if(*options.container){
+      set_container(options.container);
+  }
+
 
   if (!cloudfs_connect(options.username, options.api_key, options.authurl,
         !strcasecmp(options.use_snet, "true")))
